@@ -1,5 +1,5 @@
-const ethers = require("ethers")
 require("dotenv").config()
+const ethers = require("ethers")
 
 async function main() {
     // 将RPC与私钥存储在环境变量中
@@ -9,7 +9,7 @@ async function main() {
     let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
     // 返回这个地址已经发送过多少次交易
     const nonce = await wallet.getTransactionCount()
-    const chainId = provider.getNetwork()
+    const chainIdRes = await provider.getNetwork()
     // 构造raw TX
     let tx = {
       nonce: nonce,
@@ -18,13 +18,14 @@ async function main() {
       to: null,
       value: 0,
       data: "",
-      chainId: chainId, //也可以自动获取chainId = provider.getNetwork()
+      chainId: chainIdRes.chainId, //也可以自动获取chainId = provider.getNetwork()
     }
     // 签名，其中过程见下面详述
     let resp = await wallet.signTransaction(tx)
   	console.log(resp)
     // 发送交易
     const sentTxResponse = await wallet.sendTransaction(tx);
+    console.log("sentTxResponse:",sentTxResponse);
 }
 
 main()
