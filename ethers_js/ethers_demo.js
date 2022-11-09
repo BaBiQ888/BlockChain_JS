@@ -9,15 +9,16 @@ async function main() {
     let wallet = new ethers.Wallet(process.env.PRIVATE_KEY, provider)
     // 返回这个地址已经发送过多少次交易
     const nonce = await wallet.getTransactionCount()
+    const chainId = provider.getNetwork()
     // 构造raw TX
-    tx = {
+    let tx = {
       nonce: nonce,
       gasPrice: 100000000000,
       gasLimit: 1000000,
       to: null,
       value: 0,
       data: "",
-      chainId: 1, //也可以自动获取chainId = provider.getNetwork()
+      chainId: chainId, //也可以自动获取chainId = provider.getNetwork()
     }
     // 签名，其中过程见下面详述
     let resp = await wallet.signTransaction(tx)
